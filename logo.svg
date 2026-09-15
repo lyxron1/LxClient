@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Arka plan koyu degrade -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Neon Şimşek / X Degradesi -->
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="neonPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#6366f1" />
+    </linearGradient>
+
+    <!-- Neon Parlama Efekti -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Dış Köşeleri Yuvarlatılmış Kare (Uygulama İkon Çerçevesi) -->
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="8"/>
+
+  <!-- Minecraft İzometrik Küp İskeleti -->
+  <g stroke="#334155" stroke-width="4" fill="none" opacity="0.4">
+    <!-- Küp Üst Yüzey -->
+    <polygon points="256,90 380,160 256,230 132,160" />
+    <!-- Küp Sol Yüzey -->
+    <polygon points="132,160 256,230 256,370 132,300" />
+    <!-- Küp Sağ Yüzey -->
+    <polygon points="256,230 380,160 380,300 256,370" />
+  </g>
+
+  <!-- L Harfi (Neon Mor) -->
+  <path d="M 170 150 L 210 150 L 210 310 L 290 310 L 290 350 L 170 350 Z" 
+        fill="url(#neonPurple)" filter="url(#glow)"/>
+
+  <!-- X / Şimşek Formu (Neon Camgöbeği) -->
+  <path d="M 330 150 L 275 250 L 305 250 L 250 350 L 350 230 L 315 230 Z" 
+        fill="url(#neonCyan)" filter="url(#glow)"/>
+
+  <!-- Merkez Vurgu Noktası (Minecraft Tarzı Piksel Işıltı) -->
+  <rect x="248" y="222" width="16" height="16" fill="#ffffff" opacity="0.9" />
+</svg>

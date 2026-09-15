@@ -1,0 +1,61 @@
+{
+  "name": "lxclient",
+  "version": "1.0.0",
+  "description": "Modern Minecraft Launcher with Electron and minecraft-launcher-core",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64"
+  },
+  "build": {
+    "appId": "com.lxclient.launcher",
+    "productName": "LxClient",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/*",
+      "!.git/*",
+      "!.minecraft-game/**",
+      "!runtimes/**",
+      "!scratch/**",
+      "!settings.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LxClient",
+      "uninstallDisplayName": "LxClient",
+      "runAfterFinish": true
+    }
+  },
+  "keywords": [
+    "minecraft",
+    "launcher",
+    "electron"
+  ],
+  "author": "LxClient Team",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.6.1",
+    "minecraft-launcher-core": "^3.2.20"
+  },
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.13.3"
+  }
+}

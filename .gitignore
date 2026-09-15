@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Production builds
+dist/
+
+# Local runtimes and downloaded JREs
+runtimes/
+
+# Logs
+*.log
+logs/
+
+# User settings and personal test configs
+settings.json
+
+# Local Minecraft runtime directories
+.minecraft/
+.minecraft-game/
+
+# Temporary and scratch files
+scratch/
+.DS_Store
+Thumbs.db

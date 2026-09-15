@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LxClient - Minecraft Launcher</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Custom Frameless Titlebar -->
+    <header class="titlebar">
+        <div class="brand">
+            <img src="logo.svg" alt="LxClient Logo" class="brand-logo-img">
+            <span class="brand-name">LxClient</span>
+            <span class="brand-badge">PRO</span>
+        </div>
+        <div class="window-controls">
+            <!-- Screenshots Gallery Button -->
+            <button id="btn-screenshots" class="win-btn screenshots-btn" title="Ekran Görüntüleri Galerisi">📸</button>
+
+            <!-- Quick Folder Access Menu -->
+            <div class="quick-folder-container">
+                <button id="btn-quick-folder" class="win-btn folder-btn" title="Hızlı Klasör Erişimi">
+                    <svg class="folder-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+                <div id="quick-folder-menu" class="quick-folder-dropdown hidden">
+                    <div class="dropdown-header">Hızlı Klasör Erişimi</div>
+                    <button class="folder-item" data-folder="mods" title="Mods Klasörünü Aç">
+                        <span class="folder-icon">📁</span>
+                        <div class="folder-meta">
+                            <span class="folder-name">Mods Klasörü</span>
+                            <small class="folder-sub">Yüklü modlar (.jar)</small>
+                        </div>
+                    </button>
+                    <button class="folder-item" data-folder="resourcepacks" title="Resourcepacks Klasörünü Aç">
+                        <span class="folder-icon">🎨</span>
+                        <div class="folder-meta">
+                            <span class="folder-name">Resourcepacks</span>
+                            <small class="folder-sub">Doku paketleri</small>
+                        </div>
+                    </button>
+                    <button class="folder-item" data-folder="shaderpacks" title="Shaderpacks Klasörünü Aç">
+                        <span class="folder-icon">✨</span>
+                        <div class="folder-meta">
+                            <span class="folder-name">Shaderpacks</span>
+                            <small class="folder-sub">Gölgelendiriciler</small>
+                        </div>
+                    </button>
+                    <button class="folder-item" data-folder="root" title="Ana Oyun Dizinini Aç">
+                        <span class="folder-icon">🏠</span>
+                        <div class="folder-meta">
+                            <span class="folder-name">Ana Oyun Dizini</span>
+                            <small class="folder-sub">.minecraft kök klasörü</small>
+                        </div>
+                    </button>
+                    <button class="folder-item" data-folder="screenshots" title="Screenshots Klasörünü Aç">
+                        <span class="folder-icon">📸</span>
+                        <div class="folder-meta">
+                            <span class="folder-name">Screenshots</span>
+                            <small class="folder-sub">Ekran görüntüleri</small>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <button id="btn-settings" class="win-btn settings-btn" title="Ayarlar">⚙</button>
+            <button id="btn-minimize" class="win-btn" title="Küçült">&#x2014;</button>
+            <button id="btn-close" class="win-btn close-btn" title="Kapat">&#x2715;</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="launcher-body">
+        <div class="main-grid">
+            <!-- Left Panel: User & Setup -->
+            <section class="card config-card">
+                <div class="card-header">
+                    <h2>Oyuncu Profili</h2>
+                    <span class="tag-offline">Çevrimdışı / Cracked</span>
+                </div>
+
+                <div class="avatar-section">
+                    <div class="avatar-frame">
+                        <img id="player-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%234a3219' d='M0 0h8v2H0zM0 2h1v1H0zm7 0h1v1H7z'/%3E%3Cpath fill='%23cbb38b' d='M1 2h6v1H1zM0 3h8v3H0z'/%3E%3Cpath fill='%23ffffff' d='M1 4h1v1H1zm4 0h1v1H5z'/%3E%3Cpath fill='%232c1b77' d='M2 4h1v1H2zm4 0h1v1H6z'/%3E%3Cpath fill='%23875638' d='M3 5h2v1H3z'/%3E%3Cpath fill='%23442113' d='M2 6h4v1H2z'/%3E%3Cpath fill='%23875638' d='M1 7h6v1H1z'/%3E%3C/svg%3E" alt="Oyuncu Kafası">
+                        <div class="avatar-glow"></div>
+                    </div>
+                    <div class="avatar-meta">
+                        <span id="player-display-name">Oyuncu</span>
+                        <small>Hazır</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username-input">Kullanıcı Adı</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="username-input" placeholder="Oyuncu Adı" maxlength="16" autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Minecraft Sürümü</label>
+                    <button type="button" id="btn-open-version-picker" class="version-picker-trigger" title="Minecraft Sürümünü Seç / Değiştir">
+                        <div class="version-trigger-left">
+                            <span id="version-trigger-dot" class="version-status-dot installed">●</span>
+                            <div class="version-trigger-info">
+                                <span id="version-trigger-name" class="version-trigger-name">1.20.4</span>
+                                <span id="version-trigger-badge" class="version-trigger-badge installed">Yüklü / Hazır</span>
+                            </div>
+                        </div>
+                        <div class="version-trigger-right">
+                            <span class="version-trigger-action">Değiştir</span>
+                            <span class="version-trigger-arrow">▾</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Dynamic RAM Slider (Requirement 2) -->
+                <div class="form-group">
+                    <div class="ram-header-row">
+                        <label for="ram-slider">RAM Tahsisi</label>
+                        <span id="ram-display" class="ram-badge">2560 MB (2.5 GB)</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="ram-slider" min="1024" max="4096" step="256" value="2560">
+                    </div>
+                    <div class="ram-limits">
+                        <span id="ram-min-label">Min: 1.0 GB</span>
+                        <span id="ram-max-label">Maks: 4.0 GB</span>
+                    </div>
+                </div>
+
+                <button id="launch-button" class="btn-launch">
+                    <span class="launch-icon">▶</span>
+                    <span class="launch-label">OYUNU BAŞLAT</span>
+                </button>
+            </section>
+
+            <!-- Right Panel: Status & Console -->
+            <section class="card status-card">
+                <div class="card-header">
+                    <h2>Başlatıcı Durumu</h2>
+                    <span id="state-badge" class="badge-ready">Hazır</span>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="progress-section">
+                    <div class="progress-meta">
+                        <span id="status-text">Oyuna başlamak için kullanıcı adı girin.</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-fill"></div>
+                    </div>
+                    <div class="progress-sub-details">
+                        <span id="speed-indicator">-- KB/s</span>
+                        <span id="file-indicator">Beklemede</span>
+                    </div>
+                </div>
+
+                <!-- Live Log Terminal (Requirement 4: Streams all game logs/errors without CMD window) -->
+                <div class="console-box">
+                    <div class="console-header">
+                        <span class="console-title">
+                            <span class="terminal-dot"></span> Canlı Konsol Çıktısı
+                        </span>
+                        <div class="console-actions">
+                            <button id="btn-clear-log" class="console-btn" title="Konsolu Temizle">Temizle</button>
+                            <button id="btn-toggle-log" class="console-btn" title="Genişlet/Daralt">Genişlet</button>
+                        </div>
+                    </div>
+                    <div id="log-output" class="console-content">
+                        <div class="log-line log-system">[Sistem] LxClient başlatıldı. Çevrimdışı UUID ve Çok Oyunculu kilidi aktif.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Settings Modal (Requirement 3) -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="modal-icon">⚙</span>
+                    <h3>LxClient Ayarları</h3>
+                </div>
+                <button id="btn-close-settings" class="modal-close-btn" title="Kapat">&#x2715;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Game Directory Setting -->
+                <div class="setting-group">
+                    <label for="setting-game-dir">Oyun Dizini (Game Directory)</label>
+                    <div class="input-action-row">
+                        <input type="text" id="setting-game-dir" name="game-directory-input" data-id="game-dir-input" placeholder="Varsayılan: %APPDATA%\.minecraft" spellcheck="false">
+                        <button id="btn-browse-dir" class="btn-action">Gözat...</button>
+                    </div>
+                    <small class="setting-help">Minecraft dosyaları, dünyalar ve modlar bu dizinde saklanır.</small>
+                </div>
+
+                <!-- Resolution Setting -->
+                <div class="setting-group">
+                    <label>Pencere Çözünürlüğü</label>
+                    <div class="resolution-row">
+                        <div class="res-input-col">
+                            <span class="res-tag">Genişlik:</span>
+                            <input type="number" id="setting-res-w" value="925" min="640" max="3840" step="5">
+                        </div>
+                        <span class="res-separator">✕</span>
+                        <div class="res-input-col">
+                            <span class="res-tag">Yükseklik:</span>
+                            <input type="number" id="setting-res-h" value="530" min="480" max="2160" step="5">
+                        </div>
+                    </div>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="setting-fullscreen">
+                        <span class="custom-checkbox"></span>
+                        <span class="checkbox-label-text">Oyunu Tam Ekranda Başlat (Fullscreen)</span>
+                    </label>
+                </div>
+
+                <!-- Performance & Optimization (Aikar's JVM Flags) -->
+                <div class="setting-group">
+                    <label>Performans &amp; FPS Optimizasyonu</label>
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="setting-aikar-flags">
+                        <span class="custom-checkbox"></span>
+                        <span class="checkbox-label-text">Düşük Sistem / RAM &amp; FPS Tasarruf Modu (Aikar's JVM Flags)</span>
+                    </label>
+                    <small class="setting-help">G1GC çöp toplayıcı ve bellek parametrelerini optimize ederek FPS droplarını ve RAM tüketimini azaltır.</small>
+                </div>
+
+                <!-- Custom Java Path Setting -->
+                <div class="setting-group">
+                    <label for="setting-java-path">Özel Java / JRE Yolu</label>
+                    <div class="input-action-row">
+                        <input type="text" id="setting-java-path" placeholder="Sistem Varsayılanı (PATH üzerindeki java.exe)" spellcheck="false">
+                        <button id="btn-browse-java" class="btn-action">Gözat...</button>
+                    </div>
+                    <small class="setting-help">Boş bırakılırsa sistemdeki varsayılan 'java' komutu kullanılır.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-reset-settings" class="btn-modal-secondary">Varsayılana Sıfırla</button>
+                <button id="btn-save-settings" class="btn-modal-primary">Ayarları Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screenshots Gallery Modal / Lightbox -->
+    <div id="screenshots-modal" class="modal-overlay hidden">
+        <div class="modal-card screenshots-modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="modal-icon">📸</span>
+                    <h3>Ekran Görüntüleri Galerisi</h3>
+                    <span id="screenshots-count" class="badge-count">0 Görsel</span>
+                </div>
+                <div class="modal-header-actions">
+                    <button id="btn-open-screenshots-folder" class="btn-action-sm" title="Klasörü Dosya Gezgini'nde Aç">📁 Klasörü Aç</button>
+                    <button id="btn-close-screenshots" class="modal-close-btn" title="Kapat (ESC)">&#x2715;</button>
+                </div>
+            </div>
+            <div class="modal-body screenshots-modal-body">
+                <!-- Gallery Grid View -->
+                <div id="screenshots-grid-view" class="screenshots-grid-container">
+                    <div id="screenshots-grid" class="screenshots-grid"></div>
+                    <div id="screenshots-empty" class="screenshots-empty-state hidden">
+                        <span class="empty-icon">🖼️</span>
+                        <h4>Henüz ekran görüntüsü yok</h4>
+                        <p>Oyun içerisindeyken <kbd>F2</kbd> tuşuna basarak ekran görüntüsü alabilirsiniz.</p>
+                        <button id="btn-empty-open-folder" class="btn-action">Klasörü Aç</button>
+                    </div>
+                </div>
+
+                <!-- Single Image Preview Lightbox View -->
+                <div id="screenshot-preview-view" class="screenshot-preview-container hidden">
+                    <div class="preview-toolbar">
+                        <button id="btn-preview-back" class="btn-action-sm">← Galeriye Dön</button>
+                        <div class="preview-meta">
+                            <span id="preview-filename" class="preview-filename"></span>
+                            <span id="preview-date" class="preview-date"></span>
+                        </div>
+                    </div>
+                    <div class="preview-image-wrapper">
+                        <img id="preview-image" src="" alt="Önizleme">
+                    </div>
+                    <div class="preview-actions">
+                        <button id="btn-show-in-folder" class="btn-modal-secondary">
+                            <span>📁</span> Klasörde Göster
+                        </button>
+                        <button id="btn-copy-clipboard" class="btn-modal-primary">
+                            <span id="copy-clipboard-icon">📋</span> <span id="copy-clipboard-text">Panoya Kopyala</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version Picker Modal -->
+    <div id="version-picker-modal" class="modal-overlay hidden">
+        <div class="modal-card version-picker-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span class="modal-icon">📦</span>
+                    <h3>Minecraft Sürümü Seç</h3>
+                    <span id="version-count-badge" class="badge-count">0 Sürüm</span>
+                </div>
+                <button id="btn-close-version-picker" class="modal-close-btn" title="Kapat (ESC)">&#x2715;</button>
+            </div>
+            <div class="modal-body version-picker-body">
+                <!-- Search Box -->
+                <div class="version-search-wrapper">
+                    <span class="version-search-icon">🔍</span>
+                    <input type="text" id="version-search-input" placeholder="Sürüm ara... örn: 1.20, fabric" autocomplete="off" spellcheck="false">
+                    <button id="btn-clear-version-search" class="search-clear-btn hidden" title="Aramayı Temizle">✕</button>
+                </div>
+
+                <!-- Quick Filter Pill Tags -->
+                <div class="version-filters">
+                    <button type="button" class="version-filter-pill active" data-filter="all">Tümü</button>
+                    <button type="button" class="version-filter-pill" data-filter="installed">🟢 Yüklü / Hazır</button>
+                    <button type="button" class="version-filter-pill" data-filter="fabric">🟣 Fabric</button>
+                    <button type="button" class="version-filter-pill" data-filter="vanilla">⚪ Vanilla Releases</button>
+                </div>
+
+                <!-- Version List Area (Max 350px with custom scrollbar) -->
+                <div class="version-list-wrapper">
+                    <div id="version-picker-list" class="version-picker-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                    <div id="version-picker-empty" class="version-picker-empty hidden">
+                        <span class="empty-icon">🔎</span>
+                        <h4>Aramanıza uygun sürüm bulunamadı</h4>
+                        <small>Farklı bir sürüm numarası veya anahtar kelime deneyin.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
