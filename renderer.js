@@ -677,12 +677,10 @@ async function openSettingsModal() {
         systemDefaultGameDir = await window.api.getDefaultGamePath();
     }
     const inputEl = getGameDirInput();
-    let displayPath = (currentSettings.gamePath || currentSettings.gameDirectory || '').trim();
-    if (!displayPath || displayPath.toLowerCase().includes('c:\\users\\zarif') || displayPath.toLowerCase().includes('c:\\users\\user') || displayPath.toLowerCase().includes('lyxron')) {
-        displayPath = systemDefaultGameDir;
-    }
+    const storedDir = localStorage.getItem('lx_gameDirectory');
+    const displayPath = (currentSettings.gamePath || currentSettings.gameDirectory || storedDir || systemDefaultGameDir || '').trim();
     if (inputEl) {
-        inputEl.value = displayPath || systemDefaultGameDir;
+        inputEl.value = displayPath;
     }
     settingResW.value = currentSettings.resolutionWidth || 925;
     settingResH.value = currentSettings.resolutionHeight || 530;
@@ -708,11 +706,21 @@ settingsModal.addEventListener('click', (e) => {
 
 btnBrowseDir.addEventListener('click', async () => {
     const selectedDir = await window.api.selectGameDir();
-    if (selectedDir) {
+    if (selectedDir && typeof selectedDir === 'string' && selectedDir.trim().length > 0) {
+        const cleanDir = selectedDir.trim();
         const inputEl = getGameDirInput();
-        if (inputEl) inputEl.value = selectedDir;
-        currentSettings.gamePath = selectedDir;
-        currentSettings.gameDirectory = selectedDir;
+        if (inputEl) inputEl.value = cleanDir;
+        currentSettings.gamePath = cleanDir;
+        currentSettings.gameDirectory = cleanDir;
+        localStorage.setItem('lx_gameDirectory', cleanDir);
+        await window.api.saveSettings(currentSettings);
+        addLog(`Özel oyun dizini seçildi ve kaydedildi: ${cleanDir}`, 'system');
+
+        // Refresh installed versions for newly selected path
+        try {
+            const installed = await window.api.getInstalledVersions(cleanDir);
+            updateVersionDropdown(installed, currentSettings.lastVersion);
+        } catch (e) {}
     }
 });
 
@@ -731,19 +739,22 @@ btnResetSettings.addEventListener('click', async () => {
     if (inputEl) inputEl.value = systemDefaultGameDir;
     currentSettings.gamePath = systemDefaultGameDir;
     currentSettings.gameDirectory = systemDefaultGameDir;
+    localStorage.removeItem('lx_gameDirectory');
     settingResW.value = 925;
     settingResH.value = 530;
     settingFullscreen.checked = false;
     settingAikarFlags.checked = false;
     settingJavaPath.value = '';
+    await window.api.saveSettings(currentSettings);
     addLog('Ayarlar varsayılana döndürüldü.', 'system');
 });
 
 btnSaveSettings.addEventListener('click', async () => {
     const inputEl = getGameDirInput();
-    const chosenDir = inputEl ? inputEl.value.trim() : (currentSettings.gamePath || currentSettings.gameDirectory || '');
+    const chosenDir = (inputEl ? inputEl.value.trim() : '') || currentSettings.gamePath || currentSettings.gameDirectory || localStorage.getItem('lx_gameDirectory') || systemDefaultGameDir;
     currentSettings.gameDirectory = chosenDir;
     currentSettings.gamePath = chosenDir;
+    localStorage.setItem('lx_gameDirectory', chosenDir);
     currentSettings.resolutionWidth = parseInt(settingResW.value, 10) || 925;
     currentSettings.resolutionHeight = parseInt(settingResH.value, 10) || 530;
     currentSettings.fullscreen = settingFullscreen.checked;
@@ -758,7 +769,7 @@ btnSaveSettings.addEventListener('click', async () => {
         gamePath: chosenDir,
         gameDirectory: chosenDir
     });
-    addLog(`Ayarlar kaydedildi. Oyun dizini: ${chosenDir || systemDefaultGameDir}`, 'system');
+    addLog(`Ayarlar kaydedildi. Oyun dizini: ${chosenDir}`, 'system');
 
     // If game directory changed, refresh installed versions
     const activeDir = chosenDir || systemDefaultGameDir;
@@ -776,6 +787,12 @@ async function initSystemInfo() {
         systemDefaultGameDir = sysInfo.defaultGameDir;
         currentSettings = sysInfo.settings || {};
 
+        const storedDir = localStorage.getItem('lx_gameDirectory');
+        if (storedDir && typeof storedDir === 'string' && storedDir.trim().length > 0) {
+            currentSettings.gamePath = storedDir.trim();
+            currentSettings.gameDirectory = storedDir.trim();
+        }
+
         // Configure RAM Slider
         ramSlider.min = 1024;
         ramSlider.max = totalMemMB;
@@ -792,7 +809,7 @@ async function initSystemInfo() {
         updateRamDisplay(savedRam);
 
         // Restore last user profile
-        if (currentSettings.lastUsername && currentSettings.lastUsername.trim() && currentSettings.lastUsername !== 'lyxron1' && currentSettings.lastUsername !== 'zarif') {
+        if (currentSettings.lastUsername && currentSettings.lastUsername.trim()) {
             usernameInput.value = currentSettings.lastUsername;
             playerDisplayName.textContent = currentSettings.lastUsername;
             updatePlayerAvatar(currentSettings.lastUsername);
@@ -857,7 +874,7 @@ launchBtn.addEventListener('click', async () => {
     currentSettings.ram = ram;
     window.api.saveSettings(currentSettings);
 
-    const activeGameDir = currentSettings.gamePath || currentSettings.gameDirectory || systemDefaultGameDir;
+    const activeGameDir = (currentSettings.gamePath || currentSettings.gameDirectory || localStorage.getItem('lx_gameDirectory') || systemDefaultGameDir || '').trim();
 
     setLaunchingState(true, 'Oyun dosyaları kontrol ediliyor...');
     addLog(`Oyun başlatılıyor: ${username} (Sürüm: ${version}, RAM: ${ram}M)...`, 'system');

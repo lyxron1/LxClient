@@ -1,6 +1,6 @@
 {
   "name": "lxclient",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Modern Minecraft Launcher with Electron and minecraft-launcher-core",
   "main": "main.js",
   "scripts": {

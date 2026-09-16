@@ -101,10 +101,6 @@ function sanitizeGamePath(targetPath) {
     if (!targetPath || typeof targetPath !== 'string' || !targetPath.trim()) {
         return path.join(app.getPath('appData'), '.minecraft');
     }
-    const low = targetPath.trim().toLowerCase();
-    if (low.includes('c:\\users\\zarif') || low.includes('c:\\users\\user') || low.includes('zarif') || low.includes('lyxron')) {
-        return path.join(app.getPath('appData'), '.minecraft');
-    }
     return path.resolve(targetPath.trim());
 }
 
@@ -140,9 +136,6 @@ function loadSettings() {
         }
         loaded.gamePath = sanitizeGamePath(loaded.gamePath);
         loaded.gameDirectory = sanitizeGamePath(loaded.gameDirectory);
-        if (loaded.lastUsername === 'lyxron1' || loaded.lastUsername === 'zarif') {
-            loaded.lastUsername = '';
-        }
         return loaded;
     } catch (err) {
         return getDefaultSettings();
@@ -712,6 +705,9 @@ ipcMain.handle('launch-game', async (_event, config) => {
             } catch (e) {}
         }
 
+        const librariesDir = path.join(gameRoot, 'libraries');
+        const nativesDir = path.join(gameRoot, 'natives');
+
         let versionConfig;
         let overridesConfig = {};
 
@@ -735,7 +731,10 @@ ipcMain.handle('launch-game', async (_event, config) => {
                 versionJson: fabricInfo.versionJsonPath,
                 gameDirectory: gameRoot,
                 assetRoot: assetsDir,
-                assetIndex: assetIndexId
+                assetIndex: assetIndexId,
+                libraryRoot: librariesDir,
+                natives: nativesDir,
+                cwd: gameRoot
             };
         } else {
             versionConfig = {
@@ -745,7 +744,10 @@ ipcMain.handle('launch-game', async (_event, config) => {
             overridesConfig = {
                 gameDirectory: gameRoot,
                 assetRoot: assetsDir,
-                assetIndex: assetIndexId
+                assetIndex: assetIndexId,
+                libraryRoot: librariesDir,
+                natives: nativesDir,
+                cwd: gameRoot
             };
         }
 
@@ -811,13 +813,14 @@ ipcMain.handle('launch-game', async (_event, config) => {
             features: features,
             overrides: overridesConfig,
             customArgs: customArgs.filter(arg => arg !== '--demo'),
+            customLaunchArgs: ['--gameDir', gameRoot],
             skipAssets: false
         };
 
         // Intercept startMinecraft to strictly filter out '--demo' and unresolved '${quickPlay...}' templates
         launcher.startMinecraft = function (launchArguments) {
             const spawnOpts = {
-                cwd: this.options.overrides?.cwd || this.options.root,
+                cwd: gameRoot,
                 detached: false,
                 windowsHide: true
             };
@@ -851,6 +854,14 @@ ipcMain.handle('launch-game', async (_event, config) => {
                 cleanArguments[uuidIndex + 1] = playerUuid;
             }
 
+            // Guarantee --gameDir parameter points to gameRoot
+            const gameDirIdx = cleanArguments.indexOf('--gameDir');
+            if (gameDirIdx !== -1 && gameDirIdx + 1 < cleanArguments.length) {
+                cleanArguments[gameDirIdx + 1] = gameRoot;
+            } else if (gameDirIdx === -1) {
+                cleanArguments.push('--gameDir', gameRoot);
+            }
+
             // Guarantee assetsDir and assetIndex parameters
             const assetsDirIdx = cleanArguments.indexOf('--assetsDir');
             if (assetsDirIdx !== -1 && assetsDirIdx + 1 < cleanArguments.length) {
@@ -866,10 +877,11 @@ ipcMain.handle('launch-game', async (_event, config) => {
                 cleanArguments.push('--assetIndex', assetIndexId);
             }
 
-            // Clean any unresolved auth or asset templates
+            // Clean any unresolved auth or asset or game_directory templates
             cleanArguments = cleanArguments.map(arg => {
                 if (typeof arg !== 'string') return arg;
                 return arg
+                    .replace(/\$\{game_directory\}/g, gameRoot)
                     .replace(/\$\{auth_player_name\}/g, playerName)
                     .replace(/\$\{auth_uuid\}/g, playerUuid)
                     .replace(/\$\{auth_access_token\}/g, 'null')
