@@ -1,0 +1,332 @@
+@import "tailwindcss";
+
+:root,
+[data-theme="purple"] {
+  --bg-base: #07060d;
+  --bg-surface: #0d0b18;
+  --bg-card: #110f1f;
+  --bg-card-hover: #171429;
+  --bg-input: #090812;
+  --border-subtle: rgba(168, 85, 247, 0.14);
+  --border-card: rgba(255, 255, 255, 0.07);
+  --border-accent: rgba(168, 85, 247, 0.38);
+
+  --accent: #a855f7;
+  --accent-bright: #c084fc;
+  --accent-deep: #7e22ce;
+  --accent-soft: rgba(168, 85, 247, 0.14);
+  --accent-softer: rgba(168, 85, 247, 0.08);
+  --accent-glow: rgba(168, 85, 247, 0.35);
+  --accent-btn-text: #ffffff;
+  --accent-gradient: linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #7c3aed 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #a855f7 0%, #c084fc 50%, #8b5cf6 100%);
+  --hero-ambient: radial-gradient(ellipse at 80% 15%, rgba(168, 85, 247, 0.24), transparent 58%),
+                  radial-gradient(ellipse at 15% 85%, rgba(109, 40, 217, 0.14), transparent 55%);
+  --sidebar-ambient: radial-gradient(circle at 15% 92%, rgba(168, 85, 247, 0.16), transparent 60%);
+}
+
+[data-theme="green"] {
+  --bg-base: #050a08;
+  --bg-surface: #09120e;
+  --bg-card: #0c1611;
+  --bg-card-hover: #112018;
+  --bg-input: #060d09;
+  --border-subtle: rgba(16, 185, 129, 0.16);
+  --border-card: rgba(255, 255, 255, 0.07);
+  --border-accent: rgba(16, 185, 129, 0.4);
+
+  --accent: #10b981;
+  --accent-bright: #34d399;
+  --accent-deep: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.14);
+  --accent-softer: rgba(16, 185, 129, 0.08);
+  --accent-glow: rgba(16, 185, 129, 0.35);
+  --accent-btn-text: #04120c;
+  --accent-gradient: linear-gradient(135deg, #10b981 0%, #22c55e 50%, #059669 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #34d399 0%, #4ade80 50%, #10b981 100%);
+  --hero-ambient: radial-gradient(ellipse at 80% 15%, rgba(16, 185, 129, 0.24), transparent 58%),
+                  radial-gradient(ellipse at 15% 85%, rgba(5, 150, 105, 0.14), transparent 55%);
+  --sidebar-ambient: radial-gradient(circle at 15% 92%, rgba(16, 185, 129, 0.16), transparent 60%);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-base);
+    color: #f4f4f5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none;
+    transition: background-color 260ms ease, color 200ms ease;
+  }
+}
+
+/* =========================================================
+   Keyframes (GPU-accelerated: transform & opacity)
+   ========================================================= */
+@keyframes lxPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lxCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes lxDropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes lxModalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lxModalPanelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes lxToastIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes lxFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lxSkeletonPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Animation Utility Classes */
+.lx-page-enter {
+  animation: lxPageEnter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lx-stagger-1 {
+  animation: lxCardEnter 240ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
+}
+.lx-stagger-2 {
+  animation: lxCardEnter 240ms cubic-bezier(0.22, 1, 0.36, 1) 90ms both;
+}
+.lx-stagger-3 {
+  animation: lxCardEnter 240ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
+}
+.lx-stagger-4 {
+  animation: lxCardEnter 240ms cubic-bezier(0.22, 1, 0.36, 1) 190ms both;
+}
+
+.lx-dropdown-enter {
+  transform-origin: top center;
+  animation: lxDropdownEnter 170ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lx-modal-backdrop {
+  animation: lxModalBackdropIn 190ms ease-out both;
+}
+
+.lx-modal-panel {
+  animation: lxModalPanelIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lx-toast-enter {
+  animation: lxToastIn 210ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lx-fade-in {
+  animation: lxFadeIn 180ms ease-out both;
+}
+
+.lx-skeleton {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.08));
+  animation: lxSkeletonPulse 1.4s ease-in-out infinite;
+}
+
+/* =========================================================
+   Theme & Micro-interaction Components
+   ========================================================= */
+.lx-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  transition:
+    border-color 180ms ease,
+    background-color 220ms ease,
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms ease;
+}
+
+.lx-card-interactive:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-2px) scale(1.006);
+  box-shadow: 0 10px 28px -12px var(--accent-glow);
+}
+
+.lx-btn-primary {
+  background: var(--accent-gradient);
+  color: var(--accent-btn-text);
+  box-shadow: 0 6px 24px -6px var(--accent-glow);
+  transition:
+    transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms ease,
+    filter 160ms ease,
+    background 220ms ease;
+}
+
+.lx-btn-primary:hover:not(:disabled) {
+  background: var(--accent-gradient-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px -4px var(--accent-glow);
+}
+
+.lx-btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.lx-btn-subtle {
+  transition:
+    transform 130ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.lx-btn-subtle:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.lx-nav-item {
+  position: relative;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 160ms ease,
+    transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lx-nav-item:hover {
+  transform: translateX(2px);
+}
+
+.lx-nav-item:active {
+  transform: scale(0.98);
+}
+
+.lx-nav-active {
+  background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 100%);
+  border: 1px solid var(--border-accent);
+  color: #ffffff;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.lx-accent-text {
+  color: var(--accent-bright);
+  transition: color 220ms ease;
+}
+
+.lx-accent-badge {
+  background-color: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-bright);
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease;
+}
+
+.lx-progress-fill {
+  background: var(--accent-gradient);
+  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease;
+}
+
+.lx-input {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-card);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 220ms ease;
+}
+
+.lx-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+}

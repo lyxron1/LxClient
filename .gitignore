@@ -1,8 +1,10 @@
 # Dependencies
 node_modules/
 
-# Production builds
+# Production & Rust builds
 dist/
+src-tauri/target/
+*.tsbuildinfo
 
 # Local runtimes and downloaded JREs
 runtimes/
@@ -20,5 +22,6 @@ settings.json
 
 # Temporary and scratch files
 scratch/
+e.txt
 .DS_Store
 Thumbs.db

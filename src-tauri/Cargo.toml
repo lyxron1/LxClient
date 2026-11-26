@@ -1,0 +1,33 @@
+[package]
+name = "lxclient"
+version = "2.0.1"
+description = "LxClient - Modern Minecraft Launcher"
+authors = ["LxClient Team"]
+edition = "2021"
+
+[lib]
+name = "lxclient_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
+futures-util = "0.3"
+sysinfo = "0.33"
+dirs = "6"
+zip = "2"
+md-5 = "0.10"
+sha1 = "0.10"
+image = "0.25"
+base64 = "0.22"
+arboard = "3"
+chrono = { version = "0.4", features = ["serde"] }
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"

@@ -1,27 +1,32 @@
-# 🚀 LxClient
+# LxClient
 
-A fast, elegant, and high-performance open-source Minecraft launcher built with Electron and Node.js.
+A fast, modern, and high-performance Minecraft launcher built with **Rust + Tauri v2** and **React + TypeScript + Tailwind CSS**.
 
-## ✨ Features
+## Features
 
-* **Automatic Java 21 Management:** Detects system runtime or automatically downloads and configures Eclipse Adoptium Temurin 21.
-* **Discrete GPU Enforcement:** Windows Registry integration to force high-performance GPU (NVIDIA / AMD) allocation.
-* **Aikar's JVM Optimization:** Tuned G1GC flags minimizing memory overhead and frame drops on lower-spec hardware.
-* **Fabric Support:** Seamless Fabric loader downloads, JSON inheritance resolution, and profile management.
-* **Dynamic Directory Resolution:** Custom instance paths with zero path corruption or sync issues.
-* **Integrated Screenshot Gallery & Live Logs:** Real-time process logging and in-app screenshot gallery.
+* **Rust + Tauri v2 Architecture:** Native performance, low memory footprint, and custom frameless window.
+* **Vanilla, Fabric & Forge Support:** Full `inheritsFrom` chain resolution, concurrent asset/library downloads, and automatic Java version selection (Java 8 / 17 / 21 / 25 via Eclipse Adoptium Temurin).
+* **Theme System:** Instant switching between **Purple** (default) and **Green** themes with persistent settings.
+* **Mod Manager:** Metadata inspection (`fabric.mod.json`, `quilt.mod.json`, `mods.toml`, `neoforge.mods.toml`, `mcmod.info`), safe enable/disable (`mods/` ↔ `disabled-mods/`), drag-and-drop `.jar` installation, and delete confirmation.
+* **High-Performance Screenshot Gallery:** Disk-cached thumbnails, lazy loading, aspect-ratio preservation, and Lightbox with keyboard navigation.
+* **Aikar's JVM Optimization & GPU Preference:** Optional G1GC performance flags and Windows High-Performance GPU registry preference.
+* **Live Console:** Real-time color-coded JVM/launcher logs with search, level filtering, and copy support.
 
-## 🛠️ Getting Started
+## Getting Started
 
 ```bash
 # Clone the repository
-git clone [https://github.com/lyxron1/LxClient.git](https://github.com/lyxron1/LxClient.git)
+git clone https://github.com/lyxron1/LxClient.git
 
 # Navigate to project directory
 cd LxClient
 
-# Install dependencies
+# Install frontend dependencies
 npm install
 
-# Start development mode
-npm start
+# Run in development mode
+npm run tauri dev
+
+# Build Windows NSIS installer
+npm run tauri build -- --bundles nsis
+```

@@ -1,61 +1,28 @@
 {
   "name": "lxclient",
-  "version": "1.0.1",
-  "description": "Modern Minecraft Launcher with Electron and minecraft-launcher-core",
-  "main": "main.js",
+  "version": "2.0.1",
+  "description": "LxClient - Modern Minecraft Launcher powered by Rust & Tauri v2",
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder --win --x64"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
   },
-  "build": {
-    "appId": "com.lxclient.launcher",
-    "productName": "LxClient",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "**/*",
-      "!dist/*",
-      "!.git/*",
-      "!.minecraft-game/**",
-      "!runtimes/**",
-      "!scratch/**",
-      "!settings.json"
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "assets/icon.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "LxClient",
-      "uninstallDisplayName": "LxClient",
-      "runAfterFinish": true
-    }
-  },
-  "keywords": [
-    "minecraft",
-    "launcher",
-    "electron"
-  ],
-  "author": "LxClient Team",
-  "license": "MIT",
   "dependencies": {
-    "adm-zip": "^0.6.1",
-    "minecraft-launcher-core": "^3.2.20"
+    "@tauri-apps/api": "^2.2.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "electron": "^28.2.0",
-    "electron-builder": "^24.13.3"
+    "@tauri-apps/cli": "^2.2.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0"
   }
 }
